@@ -5,21 +5,16 @@ if (CANVAS == null) {
     throw new Error();
 }
 const ASPECT_RATIO = 4 / 3;
-export const LOGICAL_WIDTH = 160;
+export const LOGICAL_WIDTH = 300;
 export const LOGICAL_HEIGHT = LOGICAL_WIDTH / ASPECT_RATIO;
-CANVAS.width = LOGICAL_WIDTH;
-CANVAS.height = LOGICAL_HEIGHT;
 export const CONFIG = {
     type: Phaser.CANVAS,
     width: LOGICAL_WIDTH,
     height: LOGICAL_HEIGHT,
     physics: {
-        default: 'arcade',
-        arcade: {
-            gravity: { x: 0, y: 200 }
-        }
+        default: 'arcade'
     },
-    backgroundColor: "#515151",
+    backgroundColor: "#888",
     canvas: CANVAS,
     scene: Test,
     pixelArt: true

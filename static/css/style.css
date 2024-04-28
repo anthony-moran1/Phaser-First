@@ -1,7 +1,30 @@
+:root {
+    --col-bg: #888;
+    --col-colour: #000;
+
+    --theme-transition-time: 5s;
+    --theme-transition-ease: ease-in;
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+[theme="field"] {
+    --col-bg: #7a7;
+    --col-colour: #264;
+}
+
+[theme="magic"] {
+    --col-bg: #213;
+    --col-colour: #c8f;
+}
+
+[theme="cave"] {
+    --col-bg: #000;
+    --col-colour: #fff;
 }
 
 body {
@@ -17,14 +40,16 @@ body {
     justify-content: center;
     align-items: center;
 
-    background-color: #ada;
+    background-color: var(--col-bg);
     overflow: hidden;
 
-    transition: background-color 5s ease-in-out;
+    transition: background-color var(--theme-transition-time) var(--theme-transition-ease);
 }
 
 h1 {
-    color: #031;
+    color: var(--col-colour);
+
+    transition: color var(--theme-transition-time) var(--theme-transition-ease);
 }
 
 #canvas-container {
@@ -40,6 +65,7 @@ h1 {
 }
 
 canvas {
-    border: 1px solid #0008;
+    border: 1px solid var(--col-colour);
     border-radius: 5px;
+    transition: border-color var(--theme-transition-time) var(--theme-transition-ease);
 }
