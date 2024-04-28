@@ -1,0 +1,8 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "target": "ES6",
+    "types": ["Phaser"],
+    "outDir": "./static/js/",
+  }
+}

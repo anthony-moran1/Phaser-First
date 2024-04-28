@@ -1,0 +1,45 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+
+    gap: 20px;
+    padding: 50px;
+
+    width: 100vw;
+    height: 100vh;
+
+    justify-content: center;
+    align-items: center;
+
+    background-color: #ada;
+    overflow: hidden;
+
+    transition: background-color 5s ease-in-out;
+}
+
+h1 {
+    color: #031;
+}
+
+#canvas-container {
+    display: flex;
+
+    flex-grow: 1;
+    width: 100%;
+
+    min-height: 0;
+
+    justify-content: center;
+    align-items: center;
+}
+
+canvas {
+    border: 1px solid #0008;
+    border-radius: 5px;
+}
