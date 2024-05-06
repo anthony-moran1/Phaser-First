@@ -32,7 +32,7 @@ body {
     flex-direction: column;
 
     gap: 20px;
-    padding: 50px;
+    padding: 20px;
 
     width: 100vw;
     height: 100vh;
@@ -68,4 +68,10 @@ canvas {
     border: 1px solid var(--col-colour);
     border-radius: 5px;
     transition: border-color var(--theme-transition-time) var(--theme-transition-ease);
+}
+
+@media (max-height: 640px) {
+    h1 {
+        display: none;
+    }
 }

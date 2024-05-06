@@ -1,38 +1,41 @@
-class Player extends Phaser.Physics.Arcade.Sprite {
+export default class Player extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y) {
         super(scene, x, y, "player");
-        this.xSpd = 2000;
-        this.yspd = 1800;
+        this.speed = new Phaser.Math.Vector2(2000, 1800);
+        this.leftMoveKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+        this.rightMoveKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+        this.upMoveKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
+        this.downMoveKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
+        this.touchPointer = this.scene.input.pointer1;
     }
     update(delta) {
-        if (this.leftMoveKey.isDown) {
-            this.setVelocityX(-this.xSpd * delta);
+        const moveVec = new Phaser.Math.Vector2();
+        if (this.touchPointer.wasTouch) {
+            this.touchVec = new Phaser.Math.Vector2(this.touchPointer.worldX, this.touchPointer.worldY);
         }
-        else if (this.rightMoveKey.isDown) {
-            this.setVelocityX(this.xSpd * delta);
+        if (this.touchVec == null) {
+            if (this.leftMoveKey.isDown) {
+                moveVec.x = -1;
+            }
+            else if (this.rightMoveKey.isDown) {
+                moveVec.x = 1;
+            }
+            if (this.upMoveKey.isDown) {
+                moveVec.y = -1;
+            }
+            else if (this.downMoveKey.isDown) {
+                moveVec.y = 1;
+            }
+            moveVec.normalize().multiply(this.speed).scale(delta);
+            this.setVelocity(moveVec.x, moveVec.y);
         }
         else {
-            this.setVelocityX(0);
-        }
-        if (this.upMoveKey.isDown) {
-            this.setVelocityY(-this.yspd * delta);
-        }
-        else if (this.downMoveKey.isDown) {
-            this.setVelocityY(this.yspd * delta);
-        }
-        else {
-            this.setVelocityY(0);
+            this.moveToTouch(delta);
         }
     }
+    moveToTouch(delta) {
+        const moveVec = new Phaser.Math.Vector2(this.touchVec).subtract(this.body.position);
+        moveVec.normalize().multiply(this.speed).scale(delta);
+        this.setVelocity(moveVec.x, moveVec.y);
+    }
 }
-Phaser.GameObjects.GameObjectFactory.register("player", function (x, y) {
-    const player = new Player(this.scene, x, y);
-    player.leftMoveKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
-    player.rightMoveKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
-    player.upMoveKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
-    player.downMoveKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
-    this.displayList.add(player);
-    this.updateList.add(player);
-    this.scene.physics.add.existing(player);
-    return player;
-});

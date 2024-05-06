@@ -1,11 +1,12 @@
+import Player from "./objects/player.js";
 import { Test } from "./scenes/test.js";
 export const CANVAS = document.querySelector("canvas");
 const CANVAS_CONTAINER = document.querySelector("#canvas-container");
 if (CANVAS == null) {
-    throw new Error();
+    throw new Error("Could not find the canvas element");
 }
-const ASPECT_RATIO = 4 / 3;
-export const LOGICAL_WIDTH = 300;
+const ASPECT_RATIO = 16 / 9;
+export const LOGICAL_WIDTH = 260;
 export const LOGICAL_HEIGHT = LOGICAL_WIDTH / ASPECT_RATIO;
 export const CONFIG = {
     type: Phaser.CANVAS,
@@ -33,4 +34,11 @@ export function UpdateCanvasSize() {
         CANVAS.style.width = `${CANVAS_CONTAINER_WIDTH}px`;
         CANVAS.style.height = `${CANVAS_CONTAINER_WIDTH / ASPECT_RATIO}px`;
     }
+}
+let player;
+export function AddPlayer(scene, x, y) {
+    return player = new Player(scene, x, y);
+}
+export function GetPlayer() {
+    return player;
 }

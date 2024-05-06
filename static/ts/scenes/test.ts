@@ -1,26 +1,39 @@
-import { LOGICAL_HEIGHT, LOGICAL_WIDTH } from "../config.js";
-import "../objects/player.js";
-import "../objects/pet.js";
+import { LOGICAL_HEIGHT, LOGICAL_WIDTH, AddPlayer } from "../config.js";
+import Pet from "../objects/pet.js";
+import Enemy from "../objects/enemy.js";
+import { GameObjects } from "phaser";
 
 export class Test extends Phaser.Scene {
-    player: IPlayer;
-    pet: IPet;
-
     preload() {
         this.load.baseURL = "./static/assets/"
         this.load.image("player", "player.png");
         this.load.spritesheet("pet", "pet.png", {frameWidth: 11, frameHeight: 9});
+        this.load.image("enemy", "enemy.png");
     }
 
     create() {
-        this.player = this.add.player(LOGICAL_WIDTH / 2, LOGICAL_HEIGHT / 2);
-        this.pet = this.add.pet(LOGICAL_WIDTH / 4, LOGICAL_HEIGHT / 2);
+        const player = AddPlayer(this, LOGICAL_WIDTH / 2, LOGICAL_HEIGHT / 2);
+        this.cameras.main.startFollow(player);
+        const pet = new Pet(this, LOGICAL_WIDTH / 4, LOGICAL_HEIGHT / 2);
+        const enemy = new Enemy(this, LOGICAL_WIDTH * 3 / 4, LOGICAL_HEIGHT / 2);
 
-        this.pet.owner = this.player;
+        this.physics.add.collider(player, pet);
+        this.physics.add.collider(player, enemy);
+
+        player.addToDisplayList();
+
+        this.aAdd(player);
+        this.aAdd(pet);
+        this.aAdd(enemy);
     }
 
     update(time: number, delta: number): void {
-        this.player.update(delta / 1000);
-        this.pet.update(delta / 1000);
+        this.children.each(child => child.update(delta / 1000));
+    }
+
+    aAdd(object: GameObjects.GameObject) {
+        this.physics.add.existing(object);
+        object.addToUpdateList();
+        object.addToDisplayList();
     }
 }

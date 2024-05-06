@@ -1,7 +1,8 @@
-class Pet extends Phaser.Physics.Arcade.Sprite {
+import { GetVecToPlayer, IsVecLessOrEqualTo } from "../helper.js";
+export default class Pet extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y) {
         super(scene, x, y, "pet");
-        this.speed = 1500;
+        this.speed = 2000;
         this.minDistFromOwner = 20;
         this.runFrameStart = 0;
         this.runFrameEnd = 3;
@@ -15,23 +16,17 @@ class Pet extends Phaser.Physics.Arcade.Sprite {
             frameRate: 7,
             repeat: -1
         });
-        console.log(anim);
     }
     update(delta) {
-        if (this.owner == null) {
-            return;
-        }
-        const xDistToOwner = this.owner.x - this.x;
-        const yDistToOwner = this.owner.y - this.y;
-        const distToOwner = Math.pow(xDistToOwner, 2) + Math.pow(yDistToOwner, 2);
-        if (distToOwner <= Math.pow(this.minDistFromOwner, 2)) {
+        const vecToOwner = GetVecToPlayer(this);
+        if (IsVecLessOrEqualTo(vecToOwner, this.minDistFromOwner)) {
             this.setVelocity(0);
             this.setFrame(0);
             this.stop();
             this.isLost = false;
             return;
         }
-        if (distToOwner <= Math.pow(this.minDistLost, 2)) {
+        if (IsVecLessOrEqualTo(vecToOwner, this.minDistLost)) {
             return;
         }
         if (!this.isLost) {
@@ -47,7 +42,7 @@ class Pet extends Phaser.Physics.Arcade.Sprite {
         if (!this.knowWhereToRun) {
             return;
         }
-        const moveDir = new Phaser.Math.Vector2(xDistToOwner, yDistToOwner).normalize();
+        const moveDir = vecToOwner.normalize();
         const moveVelocity = moveDir.scale(this.speed * delta);
         this.setVelocity(moveVelocity.x, moveVelocity.y);
         this.play("run", true);
@@ -59,10 +54,3 @@ class Pet extends Phaser.Physics.Arcade.Sprite {
         }
     }
 }
-Phaser.GameObjects.GameObjectFactory.register("pet", function (x, y) {
-    const pet = new Pet(this.scene, x, y);
-    this.displayList.add(pet);
-    this.updateList.add(pet);
-    this.scene.physics.add.existing(pet);
-    return pet;
-});
